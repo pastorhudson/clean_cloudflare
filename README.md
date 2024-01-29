@@ -57,8 +57,6 @@ All notable changes to this project will be documented in this file.
 ```
 
 TO add a release put:
-Release: vX.X.X in the commit message
-
-
+Release: X.X.X in the commit message
 
 Edit the workflow to change the executable name
