@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    environment: ProPresenter PCO Live
+    environment: Cloudflare Cleaner
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -61,36 +61,36 @@ jobs:
       - name: Package Windows Artifact
         if: matrix.os == 'windows-latest'
         run: |
-          mv dist/main.exe dist/PcoLive.exe
+          mv dist/main.exe dist/CloudflareCleaner.exe
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
           mv dist PcoLive
-          Compress-Archive -Path ./PcoLive -DestinationPath PcoLive-windows.zip
+          Compress-Archive -Path ./PcoLive -DestinationPath CloudflareCleaner-windows.zip
         working-directory: ${{github.workspace}}
 
       - name: Package macOS Artifact
         if: matrix.os == 'macos-latest'
         run: |
-          mv dist/main dist/PcoLive
+          mv dist/main dist/CloudflareCleaner
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
           mv dist PcoLive
-          zip -r PcoLive-macOS.zip ./PcoLive
+          zip -r PcoLive-macOS.zip ./CloudflareCleaner
         working-directory: ${{github.workspace}}
 
       - name: Package Linux Artifact
         if: matrix.os == 'ubuntu-20.04'
         run: |
           ls -l dist
-          mv dist/main dist/PcoLive
+          mv dist/main dist/CloudflareCleaner
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
           ls -l dist
-          mv dist PcoLive
-          tar -czvf PcoLive-Linux.tar.gz -C ./ PcoLive
+          mv dist CloudflareCleaner
+          tar -czvf PcoLive-Linux.tar.gz -C ./ CloudflareCleaner
         working-directory: ${{github.workspace}}
 
       - name: Upload Artifact
@@ -98,13 +98,13 @@ jobs:
         with:
           name: artifact-${{ matrix.os }}
           path: |
-            PcoLive-windows.zip
-            PcoLive-macOS.zip
-            PcoLive-Linux.tar.gz
+            CloudflareCleaner-windows.zip
+            CloudflareCleaner-macOS.zip
+            CloudflareCleaner-Linux.tar.gz
 
   release:
     if: "contains(github.event.head_commit.message, 'Release: ')"
-    environment: ProPresenter PCO Live
+    environment: Cloudflare Cleaner
     permissions:
       contents: write
     needs: build
@@ -141,8 +141,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/artifact-windows-latest/PcoLive-windows.zip
-          asset_name: PcoLive-Windows.zip
+          asset_path: ./artifacts/artifact-windows-latest/CloudflareCleaner-windows.zip
+          asset_name: CloudflareCleaner-Windows.zip
           asset_content_type: application/zip
 
       - name: Upload macOS Artifact to Release
@@ -151,8 +151,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/artifact-macos-latest/PcoLive-macOS.zip
-          asset_name: PcoLive-macOS.zip
+          asset_path: ./artifacts/artifact-macos-latest/CloudflareCleaner-macOS.zip
+          asset_name: CloudflareCleaner-macOS.zip
           asset_content_type: application/zip
 
       - name: Upload Linux Artifact to Release
@@ -161,6 +161,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/artifact-ubuntu-20.04/PcoLive-Linux.tar.gz
-          asset_name: PcoLive-Linux.tar.gz
+          asset_path: ./artifacts/artifact-ubuntu-20.04/CloudflareCleaner-Linux.tar.gz
+          asset_name: CloudflareCleaner-Linux.tar.gz
           asset_content_type: application/gzip
