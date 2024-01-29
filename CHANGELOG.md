@@ -5,3 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Changes
  - First Release Build
  - Added silent mode
+
+## v1.0.1
+### Changes
+ - Updated Readme Badge
