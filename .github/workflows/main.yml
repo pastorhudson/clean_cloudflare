@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    environment: Build & Release Environment
+    environment: Build & Release Environment # Change this to your own environment name /settings/environments if needed
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -61,36 +61,36 @@ jobs:
       - name: Package Windows Artifact
         if: matrix.os == 'windows-latest'
         run: |
-          mv dist/main.exe dist/${{ vars.PROGRAM_NAME }}.exe
+          mv dist/main.exe dist/${{ env.PROGRAM_NAME }}.exe
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
-          mv dist ${{ vars.PROGRAM_NAME }}
-          Compress-Archive -Path ./${{ vars.PROGRAM_NAME }} -DestinationPath ${{ vars.PROGRAM_NAME }}-windows.zip
+          mv dist ${{ env.PROGRAM_NAME }}
+          Compress-Archive -Path ./${{ env.PROGRAM_NAME }} -DestinationPath ${{ env.PROGRAM_NAME }}-windows.zip
         working-directory: ${{github.workspace}}
 
       - name: Package macOS Artifact
         if: matrix.os == 'macos-latest'
         run: |
-          mv dist/main dist/${{ vars.PROGRAM_NAME }}
+          mv dist/main dist/${{ env.PROGRAM_NAME }}
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
-          mv dist ${{ vars.PROGRAM_NAME }}
-          zip -r ${{ vars.PROGRAM_NAME }}-macOS.zip ./${{ vars.PROGRAM_NAME }}
+          mv dist ${{ env.PROGRAM_NAME }}
+          zip -r ${{ env.PROGRAM_NAME }}-macOS.zip ./${{ env.PROGRAM_NAME }}
         working-directory: ${{github.workspace}}
 
       - name: Package Linux Artifact
         if: matrix.os == 'ubuntu-20.04'
         run: |
           ls -l dist
-          mv dist/main dist/${{ vars.PROGRAM_NAME }}
+          mv dist/main dist/${{ env.PROGRAM_NAME }}
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
           ls -l dist
-          mv dist ${{ vars.PROGRAM_NAME }}
-          tar -czvf ${{ vars.PROGRAM_NAME }}-Linux.tar.gz -C ./ ${{ vars.PROGRAM_NAME }}
+          mv dist ${{ env.PROGRAM_NAME }}
+          tar -czvf ${{ env.PROGRAM_NAME }}-Linux.tar.gz -C ./ ${{ env.PROGRAM_NAME }}
         working-directory: ${{github.workspace}}
 
       - name: Upload Artifact
@@ -98,13 +98,13 @@ jobs:
         with:
           name: artifact-${{ matrix.os }}
           path: |
-            ${{ vars.PROGRAM_NAME }}-windows.zip
-            ${{ vars.PROGRAM_NAME }}-macOS.zip
-            ${{ vars.PROGRAM_NAME }}-Linux.tar.gz
+            ${{ env.PROGRAM_NAME }}-windows.zip
+            ${{ env.PROGRAM_NAME }}-macOS.zip
+            ${{ env.PROGRAM_NAME }}-Linux.tar.gz
 
   release:
     if: "contains(github.event.head_commit.message, 'Release: ')"
-    environment: ProPresenter PCO Live
+    environment: Build & Release Environment
     permissions:
       contents: write
     needs: build
@@ -139,10 +139,11 @@ jobs:
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
+
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/artifact-windows-latest/${{ vars.PROGRAM_NAME }}-windows.zip
-          asset_name: ${{ vars.PROGRAM_NAME }}-Windows.zip
+          asset_path: ./artifacts/artifact-windows-latest/${{ env.PROGRAM_NAME }}-windows.zip
+          asset_name: ${{ env.PROGRAM_NAME }}-Windows.zip
           asset_content_type: application/zip
 
       - name: Upload macOS Artifact to Release
@@ -151,8 +152,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/artifact-macos-latest/${{ vars.PROGRAM_NAME }}-macOS.zip
-          asset_name: ${{ vars.PROGRAM_NAME }}-macOS.zip
+          asset_path: ./artifacts/artifact-macos-latest/${{ env.PROGRAM_NAME }}-macOS.zip
+          asset_name: ${{ env.PROGRAM_NAME }}-macOS.zip
           asset_content_type: application/zip
 
       - name: Upload Linux Artifact to Release
@@ -161,6 +162,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/artifact-ubuntu-20.04/${{ vars.PROGRAM_NAME }}-Linux.tar.gz
-          asset_name: ${{ vars.PROGRAM_NAME }}-Linux.tar.gz
+          asset_path: ./artifacts/artifact-ubuntu-20.04/${{ env.PROGRAM_NAME }}-Linux.tar.gz
+          asset_name: ${{ env.PROGRAM_NAME }}-Linux.tar.gz
           asset_content_type: application/gzip
