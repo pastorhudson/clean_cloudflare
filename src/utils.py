@@ -63,7 +63,7 @@ def check_config():
             'api_key': '123',
             ';Your Cloudflare Account ID Found on Right side of Stream Page': '',
             'account_id': '123',
-            ';Whitelisted video ids': '',
+            ';A list of whitelisted video ids that will be skipped and not deleted': '',
             'whitelist': ['123', '456'],
 
         }

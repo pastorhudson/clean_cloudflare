@@ -5,6 +5,20 @@ from utils import setup_logger, get_config
 logger = setup_logger(__name__)
 
 
+def test_keys():
+    config = get_config()
+    logger.info("Testing keys")
+    account_id = config.get('app', 'account_id')
+    headers = get_headers(config)
+    whitelist = config.get('app', 'whitelist')
+    videos = list_videos(account_id, headers)
+    if videos is None:
+        return "No Videos"
+    else:
+        logger.info("Found {} videos".format(len(videos)))
+        return
+
+
 def get_headers(config):
     # Headers for authentication
     headers = {
@@ -38,7 +52,6 @@ def clean_videos():
     account_id = config.get('app', 'account_id')
     headers = get_headers(config)
     whitelist = config.get('app', 'whitelist')
-    logger.info(whitelist)
     one_year_ago = datetime.now() - timedelta(days=365)
     videos = list_videos(account_id, headers)
     for video in videos:
