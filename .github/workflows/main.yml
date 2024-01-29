@@ -65,8 +65,8 @@ jobs:
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
-          mv dist PcoLive
-          Compress-Archive -Path ./PcoLive -DestinationPath CloudflareCleaner-windows.zip
+          mv dist CloudflareCleaner
+          Compress-Archive -Path ./CloudflareCleaner -DestinationPath CloudflareCleaner-windows.zip
         working-directory: ${{github.workspace}}
 
       - name: Package macOS Artifact
@@ -76,8 +76,8 @@ jobs:
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
-          mv dist PcoLive
-          zip -r PcoLive-macOS.zip ./CloudflareCleaner
+          mv dist CloudflareCleaner
+          zip -r CloudflareCleaner-macOS.zip ./CloudflareCleaner
         working-directory: ${{github.workspace}}
 
       - name: Package Linux Artifact
@@ -90,7 +90,7 @@ jobs:
           cp CHANGELOG.md dist/
           ls -l dist
           mv dist CloudflareCleaner
-          tar -czvf PcoLive-Linux.tar.gz -C ./ CloudflareCleaner
+          tar -czvf CloudflareCleaner-Linux.tar.gz -C ./ CloudflareCleaner
         working-directory: ${{github.workspace}}
 
       - name: Upload Artifact
