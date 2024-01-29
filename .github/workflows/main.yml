@@ -28,7 +28,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Check PROGRAM_NAME Environment Variable
-        run: echo "PROGRAM_NAME=${{ env.PROGRAM_NAME }}"
+        run: echo "PROGRAM_NAME=${{ vars.PROGRAM_NAME }}"
 
       - name: Install Dependencies
         run: |
