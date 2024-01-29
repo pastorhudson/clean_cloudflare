@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime, timedelta
-from src.utils import setup_logger, get_config
+from utils import setup_logger, get_config
 
 logger = setup_logger(__name__)
 
