@@ -1,5 +1,4 @@
-[![Build and Release](https://github.com/pastorhudson/ProPresenter-PCO-Live-Auto-Control/actions/workflows/main.yml/badge.svg)](https://github.com/pastorhudson/ProPresenter-PCO-Live-Auto-Control/actions/workflows/main.yml)
-# Cloudflare Cleaner
+[![Build and Release](https://github.com/pastorhudson/clean_cloudflare/actions/workflows/main.yml/badge.svg)](https://github.com/pastorhudson/clean_cloudflare/actions/workflows/main.yml)# Cloudflare Cleaner
 ### What is this?
 This is a script to delete videos from cloudflare streaming that are one year old or older. Use this to ensure you don't go over your video storage limit.
 
