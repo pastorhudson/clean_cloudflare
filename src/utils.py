@@ -1,6 +1,5 @@
 import configparser
 import os
-from pypco import PCO
 import logging
 import colorlog
 from datetime import datetime
@@ -49,25 +48,6 @@ def setup_logger(logger_name):
 logger = setup_logger(__name__)
 
 
-def get_pco():
-    """
-    Retrieve the PCO object.
-
-    This method reads the configuration file 'config.ini' and creates a PCO object with the specified application ID and secret.
-
-    :return: The PCO object.
-    """
-    check_config()
-
-    try:
-        config = configparser.ConfigParser()
-        config.read('config.ini')
-    except Exception:
-        logger.error(Exception)
-
-    return PCO(config.get('app', 'application_id'), config.get('app', 'secret'))
-
-
 def check_config():
     # Check if the file does not exist
     if not os.path.isfile('config.ini'):
@@ -77,36 +57,37 @@ def check_config():
 
         # Populate the configparser object with your data
         config['app'] = {
-            ';Get your Planning Center application_id and secret at https://api.planningcenteronline.com/oauth/applications': '',
-            'application_id': 'pco_app_id',
-            'secret': 'pco_app_secret',
-            ';Default is localhost 127.0.0.1 this is for running the program on the same machine as ProPresenter': '',
-            'pro_presenter_ip': '127.0.0.1',
-            'pro_presenter_port': '50001',
+            ';Your Cloudflare account email': '',
+            'email': 'you@email.com',
+            ';Your Cloudflare API Key': '',
+            'api_key': '123',
+            ';Your Cloudflare Account ID Found on Right side of Stream Page': '',
+            'account_id': '123',
+            ';Whitelisted video ids': '',
+            'whitelist': ['123', '456'],
+
         }
 
         # Write the populated configparser object to config.ini file
         with open('config.ini', 'w') as configfile:
             config.write(configfile)
-        raise Exception("ProPresenter configuration not found.\n"
+        raise Exception("Configuration not found.\n"
                         "One has been created for you. Please edit the config.ini with your own settings.")
-    # logger.info("Config File Found")
-    return
+    logger.info("Config File Found")
+    return "Config found - Success"
 
 
-def get_propresenter_config():
+def get_config():
     """
-    Returns the IP address and port number of the ProPresenter application
-    configured in the 'config.ini' file.
+    Reads and returns the configuration from the 'config.ini' file.
 
-    :return: The IP address and port number of the ProPresenter application.
+    :return: The configuration as a configparser.ConfigParser object.
     """
     check_config()
 
     config = configparser.ConfigParser()
     config.read('config.ini')
-
-    return config.get('app', 'pro_presenter_ip'), config.get('app', 'pro_presenter_port')
+    return config
 
 
 if __name__ == '__main__':

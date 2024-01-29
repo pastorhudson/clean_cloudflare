@@ -1,6 +1,6 @@
 import argparse
-from utils import setup_logger
-from pypco.exceptions import PCORequestException
+from utils import setup_logger, check_config
+from clean import clean_videos
 
 
 def main():
@@ -13,14 +13,18 @@ def main():
     args = parser.parse_args()
 
     if args.test:
-        print("SUCCESS")
+        try:
+            check_config()
+        except Exception as e:
+            logger.error(e)
         return
     try:
-        print('Hello World')
+        clean_videos()
     except KeyboardInterrupt:
-        logger.info("Thanks for using this recipe. Check out more recipes at https://pcochef.com")
-    except PCORequestException:
-        logger.error("Please Check your Planning Center API keys are correct in the config.ini")
+        logger.info("Thanks for using this recipe https://github.com/pastorhudson/clean_cloudflare.\n"
+                    "Check out more recipes at https://pcochef.com")
+    except Exception as e:
+        logger.error(e)
 
 
 if __name__ == "__main__":
