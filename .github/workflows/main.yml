@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    environment: Cloudflare Cleaner # Change this to your own environment name /settings/environments
+    environment: Build & Release Environment
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
