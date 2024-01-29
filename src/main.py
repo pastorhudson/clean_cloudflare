@@ -12,8 +12,7 @@ def main():
     logger = setup_logger(__name__)
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--test", help="test option: return the string 'SUCCESS'", action='store_true')
-    # parser.add_argument("-s", "--service_type_id", help="service type id")
-    # parser.add_argument("-p", "--plan_id", help="plan id")
+    parser.add_argument("-s", "--silent", help="silent run")
 
     args = parser.parse_args()
 
@@ -32,6 +31,11 @@ def main():
                         "Check out more recipes at https://pcochef.com")
         except Exception as e:
             logger.error(e)
+
+    if not args.silent:
+
+        # Wait for user input before closing
+        input("Press any key to exit...")
 
 
 if __name__ == "__main__":
