@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    environment: Cloudflare Cleaner
+    environment: Cloudflare Cleaner # Change this to your own environment name /settings/environments
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -61,36 +61,36 @@ jobs:
       - name: Package Windows Artifact
         if: matrix.os == 'windows-latest'
         run: |
-          mv dist/main.exe dist/CloudflareCleaner.exe
+          mv dist/main.exe dist/${{ vars.PROGRAM_NAME }}.exe
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
-          mv dist CloudflareCleaner
-          Compress-Archive -Path ./CloudflareCleaner -DestinationPath CloudflareCleaner-windows.zip
+          mv dist ${{ vars.PROGRAM_NAME }}
+          Compress-Archive -Path ./${{ vars.PROGRAM_NAME }} -DestinationPath ${{ vars.PROGRAM_NAME }}-windows.zip
         working-directory: ${{github.workspace}}
 
       - name: Package macOS Artifact
         if: matrix.os == 'macos-latest'
         run: |
-          mv dist/main dist/CloudflareCleaner
+          mv dist/main dist/${{ vars.PROGRAM_NAME }}
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
-          mv dist CloudflareCleaner
-          zip -r CloudflareCleaner-macOS.zip ./CloudflareCleaner
+          mv dist ${{ vars.PROGRAM_NAME }}
+          zip -r ${{ vars.PROGRAM_NAME }}-macOS.zip ./${{ vars.PROGRAM_NAME }}
         working-directory: ${{github.workspace}}
 
       - name: Package Linux Artifact
         if: matrix.os == 'ubuntu-20.04'
         run: |
           ls -l dist
-          mv dist/main dist/CloudflareCleaner
+          mv dist/main dist/${{ vars.PROGRAM_NAME }}
           cp README.md dist/
           cp LICENSE dist/
           cp CHANGELOG.md dist/
           ls -l dist
-          mv dist CloudflareCleaner
-          tar -czvf CloudflareCleaner-Linux.tar.gz -C ./ CloudflareCleaner
+          mv dist ${{ vars.PROGRAM_NAME }}
+          tar -czvf ${{ vars.PROGRAM_NAME }}-Linux.tar.gz -C ./ ${{ vars.PROGRAM_NAME }}
         working-directory: ${{github.workspace}}
 
       - name: Upload Artifact
@@ -98,13 +98,13 @@ jobs:
         with:
           name: artifact-${{ matrix.os }}
           path: |
-            CloudflareCleaner-windows.zip
-            CloudflareCleaner-macOS.zip
-            CloudflareCleaner-Linux.tar.gz
+            ${{ vars.PROGRAM_NAME }}-windows.zip
+            ${{ vars.PROGRAM_NAME }}-macOS.zip
+            ${{ vars.PROGRAM_NAME }}-Linux.tar.gz
 
   release:
     if: "contains(github.event.head_commit.message, 'Release: ')"
-    environment: Cloudflare Cleaner
+    environment: ProPresenter PCO Live
     permissions:
       contents: write
     needs: build
@@ -124,7 +124,7 @@ jobs:
           draft: false
           regex: "/^Release: #{semver}$/i"
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }} # Add Personal Access token and then add that as an environment secret
+          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -138,29 +138,29 @@ jobs:
       - name: Upload Windows Artifact to Release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }} # Add Personal Access token and then add that as an environment secret
+          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/artifact-windows-latest/CloudflareCleaner-windows.zip
-          asset_name: CloudflareCleaner-Windows.zip
+          asset_path: ./artifacts/artifact-windows-latest/${{ vars.PROGRAM_NAME }}-windows.zip
+          asset_name: ${{ vars.PROGRAM_NAME }}-Windows.zip
           asset_content_type: application/zip
 
       - name: Upload macOS Artifact to Release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }} # Add Personal Access token and then add that as an environment secret
+          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/artifact-macos-latest/CloudflareCleaner-macOS.zip
-          asset_name: CloudflareCleaner-macOS.zip
+          asset_path: ./artifacts/artifact-macos-latest/${{ vars.PROGRAM_NAME }}-macOS.zip
+          asset_name: ${{ vars.PROGRAM_NAME }}-macOS.zip
           asset_content_type: application/zip
 
       - name: Upload Linux Artifact to Release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }} # Add Personal Access token and then add that as an environment secret
+          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/artifact-ubuntu-20.04/CloudflareCleaner-Linux.tar.gz
-          asset_name: CloudflareCleaner-Linux.tar.gz
+          asset_path: ./artifacts/artifact-ubuntu-20.04/${{ vars.PROGRAM_NAME }}-Linux.tar.gz
+          asset_name: ${{ vars.PROGRAM_NAME }}-Linux.tar.gz
           asset_content_type: application/gzip
