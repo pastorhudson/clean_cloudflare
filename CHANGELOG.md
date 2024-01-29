@@ -13,3 +13,7 @@ All notable changes to this project will be documented in this file.
 ## v1.0.2
 ### Changes
  - Updated to new version of template
+
+## v1.0.3
+### Changes
+ - Added Code of Conduct
