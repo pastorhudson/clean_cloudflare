@@ -1,6 +1,6 @@
 import argparse
 from utils import setup_logger, check_config
-from clean import clean_videos, test_keys
+from clean import clean_videos, test_keys, clean_names
 
 
 def main():
@@ -13,6 +13,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--test", help="test option: return the string 'SUCCESS'", action='store_true')
     parser.add_argument("-s", "--silent", help="silent run")
+    parser.add_argument("-n", "--names", help="fix names")
+
 
     args = parser.parse_args()
 
@@ -23,6 +25,8 @@ def main():
         except Exception as e:
             logger.error(e)
         return
+    elif args.names:
+        clean_names()
     else:
         try:
             clean_videos()

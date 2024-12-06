@@ -1,3 +1,4 @@
+import json
 import requests
 from datetime import datetime, timedelta
 from utils import setup_logger, get_config
@@ -47,6 +48,9 @@ def delete_video(account_id, video_id, headers):
     return response.status_code == 200
 
 
+
+
+
 def clean_videos():
     config = get_config()
     account_id = config.get('app', 'account_id')
@@ -71,5 +75,53 @@ def clean_videos():
                 logger.info(f"Skipping Whitelist Video: {video['uid']}")
 
 
+def update_video(account_id, video_id, headers, payload):
+    """Updates a specific video's metadata on Cloudflare Stream"""
+    url = f'https://api.cloudflare.com/client/v4/accounts/{account_id}/stream/{video_id}'
+
+    # The payload should only include the metadata we want to update
+    update_payload = {
+        "meta": {
+            "name": payload['meta']['name']
+        }
+    }
+
+    # Cloudflare API expects PATCH method for updates
+    response = requests.post(url, headers=headers, json=update_payload)
+
+    if response.status_code != 200:
+        logger.error(f"Error updating video: {response.json()}")
+
+    return response.status_code == 200
+
+
+def clean_names():
+    config = get_config()
+    account_id = config.get('app', 'account_id')
+    headers = get_headers(config)
+    whitelist = config.get('app', 'whitelist').split(',')  # Assuming comma-separated whitelist
+
+    videos = list_videos(account_id, headers)
+    for video in videos:
+        if video['uid'] in whitelist:
+            logger.info(f"Skipping Whitelist Video: {video['uid']}")
+            continue
+
+        original_name = video['meta']['name']
+        if ".mp4" in original_name:
+            new_name = original_name.replace(".mp4", "")
+
+            # Only update if the name has actually changed
+            if new_name != original_name:
+                update_payload = video.copy()
+                update_payload['meta']['name'] = new_name
+
+                if update_video(account_id, video['uid'], headers, update_payload):
+                    logger.info(f"Successfully updated video: {video['uid']}")
+                    logger.info(f"New name: {new_name}")
+                else:
+                    logger.error(f"Failed to update video: {video['uid']}")
+
+
 if __name__ == "__main__":
-    clean()
+    clean_names()
