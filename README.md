@@ -43,6 +43,9 @@ CloudflareCleaner [options]
   **Description:** Enables the test mode.  
   **Behavior:** Returns the string 'SUCCESS' and exits.  
   **Example:** `python main.py --test`
+- `-n`, `--names`
+  **Description:** Removes .mp4 from video names
+  **Example:** `python main.py --names`
 
 ### DEV Setup
 
