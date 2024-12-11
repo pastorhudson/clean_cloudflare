@@ -17,3 +17,7 @@ All notable changes to this project will be documented in this file.
 ## v1.0.3
 ### Changes
  - Added Code of Conduct
+
+## v1.0.4
+### Changes
+ - Added -n command to remove .mp4 from all uploaded file Titles
